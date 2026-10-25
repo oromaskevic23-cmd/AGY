@@ -1,4 +1,4 @@
-Author & Chief Architect: Alexander Romaskevich (RomaskevicH)
+Author & Architect: Alexander Romaskevich (RomaskevicH)
 
 Security Principles (short)
 - Identity ≠ Authority

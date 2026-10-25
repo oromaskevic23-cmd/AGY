@@ -1,4 +1,4 @@
-Author & Chief Architect: Alexander Romaskevich (RomaskevicH)
+Author & Architect: Alexander Romaskevich (RomaskevicH)
 
 Foundation and core principles for AGY.
 

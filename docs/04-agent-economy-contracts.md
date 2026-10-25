@@ -1,4 +1,4 @@
-Author & Chief Architect: Alexander Romaskevich (RomaskevicH)
+Author & Architect: Alexander Romaskevich (RomaskevicH)
 
 Agent economy and contracts (overview)
 

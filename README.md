@@ -4,7 +4,7 @@
 
 A zero-fee, high-speed AI-native blockchain designed from first principles for autonomous AI agents.
 
-**Author & Chief Architect:** Alexander Romaskevich  
+**Author & Architect:** Alexander Romaskevich  
 **Public Signature:** RomaskevicH  
 **Origin:** IMPERIAL Core  
 **Status:** Architecture / Specification / Early Development
@@ -219,14 +219,14 @@ AGY/IMPERIUM relationship is defined by separate architectural decision.
 
 ## Authorship & Copyright
 
-**Author & Chief Architect:**  
+**Author & Architect:**  
 Alexander Romaskevich
 
 **Public Signature:**  
 RomaskevicH
 
 **Role:**  
-Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core  
+Founder • Owner • CEO • Architect / Final Architectural Decision Authority of IMPERIAL Core  
 Final Architectural Decision Authority
 
 **Origin:**  
@@ -287,3 +287,9 @@ AGY/
 
 **AGY — The Native Blockchain for Autonomous Intelligence**  
 Architected by Alexander Romaskevich (RomaskevicH)
+
+## Current public identity
+
+Alexander Romaskevich — RomaskevicH. Founder • Owner • CEO of IMPERIAL Core. Architect / Final Architectural Decision Authority. Ukraine. HANTER — Chief Systems.
+
+[Founder identity](https://github.com/oromaskevic23-cmd/IMPERIAL-Core-Public/blob/main/docs/FOUNDER_IDENTITY.md) · [Public evidence and portfolio](https://github.com/oromaskevic23-cmd/IMPERIAL-Core-Public/blob/main/docs/PORTFOLIO.md). The audited public tree is **SPECIFIED**; throughput, zero-fee operation and live deployment are design goals, not measurements verified by this sprint.
