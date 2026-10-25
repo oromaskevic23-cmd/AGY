@@ -1,7 +1,7 @@
 SPECIFICATION
 STATUS: IN DEVELOPMENT
 
-Author & Chief Architect: Alexander Romaskevich (RomaskevicH)
+Author & Architect: Alexander Romaskevich (RomaskevicH)
 
 This document is a canonical index for AGY specifications. The specification is actively being developed — it is not final.
 

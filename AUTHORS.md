@@ -1,10 +1,10 @@
-Author & Chief Architect:
+Author & Architect:
 Alexander Romaskevich
 
 Public Signature:
 RomaskevicH
 
-Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core
+Founder • Owner • CEO • Architect / Final Architectural Decision Authority of IMPERIAL Core
 
 Final Architectural Decision Authority
 
@@ -27,7 +27,7 @@ Origin:
 IMPERIAL Core
 
 Role:
-Founder • Owner • CEO • Chief Systems Architect of IMPERIAL Core
+Founder • Owner • CEO • Architect / Final Architectural Decision Authority of IMPERIAL Core
 Final Architectural Decision Authority
 
 Note: This document records primary authorship. Git history and contributor records remain unchanged and are preserved in the repository.

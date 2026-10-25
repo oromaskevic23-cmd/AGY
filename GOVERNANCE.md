@@ -1,4 +1,4 @@
-Author & Chief Architect: Alexander Romaskevich (RomaskevicH)
+Author & Architect: Alexander Romaskevich (RomaskevicH)
 
 Governance overview
 - Validator governance: Rules and processes that govern validator onboarding, slashing, and removal.
