@@ -1,5 +1,8 @@
 # AGY
 
+**Original project founder / architect:** Alexander Nikolaevich Romaskevich (RomaskevicH). [Existing authorship](AUTHORS.md) · [License review](governance/LICENSE_INVENTORY.md).
+
+
 ## The Native Blockchain for Autonomous Intelligence
 
 A zero-fee, high-speed AI-native blockchain designed from first principles for autonomous AI agents.
