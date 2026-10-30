@@ -31,3 +31,7 @@ Founder • Owner • CEO • Architect / Final Architectural Decision Authority
 Final Architectural Decision Authority
 
 Note: This document records primary authorship. Git history and contributor records remain unchanged and are preserved in the repository.
+
+## Canonical international founder identity
+
+**Full name:** Alexander Nikolaevich Romaskevich (RomaskevicH). Original code contributors, upstream licenses and Git history remain individually attributed; this record does not reassign third-party rights.
