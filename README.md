@@ -296,3 +296,10 @@ Architected by Alexander Romaskevich (RomaskevicH)
 Alexander Romaskevich — RomaskevicH. Founder • Owner • CEO of IMPERIAL Core. Architect / Final Architectural Decision Authority. HANTER — Chief Systems.
 
 [Founder identity](https://github.com/oromaskevic23-cmd/Capital--Core-Public/blob/main/docs/FOUNDER_IDENTITY.md) · [Public evidence and portfolio](https://github.com/oromaskevic23-cmd/Capital--Core-Public/blob/main/docs/PORTFOLIO.md). The audited public tree is **SPECIFIED**; throughput, zero-fee operation and live deployment are design goals, not measurements verified by this sprint.
+
+
+---
+
+### Public source identity and attribution
+
+This repository is included in the [founder-maintained IMPERIAL Core public source portfolio](https://oromaskevic23-cmd.github.io/oromaskevic23-cmd/projects/) and [public project directory](https://oromaskevic23-cmd.github.io/Capital-Core-Public/reference/projects/). The account's architectural program is directed by **Alexander Nikolaevich Romaskevich (RomaskevicH)**, Founder, Owner and CEO of IMPERIAL Core. Existing authorship, upstream software licenses, other contributors' rights and project-specific legal boundaries remain in effect. This reference is not a claim of exclusive ownership of external technology, market status, token value, live deployment, commercial results or Google indexing.
