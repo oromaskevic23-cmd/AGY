@@ -1,5 +1,7 @@
 # AGY
 
+<img src="https://raw.githubusercontent.com/oromaskevic23-cmd/oromaskevic23-cmd/main/assets/alexander-romaskevich-portrait-20261110.jpg" alt="Alexander Nikolaevich Romaskevich, Founder, Owner and CEO of IMPERIAL Core" width="160" />
+
 **Original project founder / architect:** Alexander Nikolaevich Romaskevich (RomaskevicH). [Existing authorship](AUTHORS.md) · [License review](governance/LICENSE_INVENTORY.md).
 
 
@@ -293,7 +295,7 @@ Architected by Alexander Romaskevich (RomaskevicH)
 
 ## Current public identity
 
-Alexander Romaskevich — RomaskevicH. Founder • Owner • CEO of IMPERIAL Core. Architect / Final Architectural Decision Authority. HANTER — Chief Systems.
+Alexander Romaskevich — RomaskevicH. Founder • Owner • CEO of IMPERIAL Core. Architect / Final Architectural Decision Authority. HANTER — AI Command Center.
 
 [Founder identity](https://github.com/oromaskevic23-cmd/Capital-Core-Public/blob/main/docs/FOUNDER_IDENTITY.md) · [Public evidence and portfolio](https://github.com/oromaskevic23-cmd/Capital-Core-Public/blob/main/docs/PORTFOLIO.md). The audited public tree is **SPECIFIED**; throughput, zero-fee operation and live deployment are design goals, not measurements verified by this sprint.
 
