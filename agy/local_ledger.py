@@ -191,7 +191,7 @@ class LocalLedger:
                     raise ValueError("invalid event body")
                 if not hmac.compare_digest(_event_hash(seq, previous, body), event_hash):
                     raise ValueError("event hash mismatch")
-                if (obj["payload"].get("kind") == "resume"
+                if (type(obj["payload"]) is dict and obj["payload"].get("kind") == "resume"
                         and obj["payload"].get("control_head") != previous):
                     raise ValueError("resume is not bound to predecessor head")
                 state.apply(obj["payload"], obj["signature"], policy, obj["accepted_at"])
