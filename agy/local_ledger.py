@@ -191,6 +191,9 @@ class LocalLedger:
                     raise ValueError("invalid event body")
                 if not hmac.compare_digest(_event_hash(seq, previous, body), event_hash):
                     raise ValueError("event hash mismatch")
+                if (obj["payload"].get("kind") == "resume"
+                        and obj["payload"].get("control_head") != previous):
+                    raise ValueError("resume is not bound to predecessor head")
                 state.apply(obj["payload"], obj["signature"], policy, obj["accepted_at"])
             except (ValueError, TypeError, UnicodeError, RecursionError) as exc:
                 raise LedgerIntegrityError("event failed replay or integrity verification") from exc
@@ -211,7 +214,8 @@ class LocalLedger:
             state, count, head, _ = self._replay(conn)
             self._check_head(expected_head, head)
             return {"events": count, "head": head, "missions": copy.deepcopy(state.missions),
-                    "revoked_actors": sorted(state.revoked_actors), "halted": state.halted}
+                    "revoked_actors": sorted(state.revoked_actors), "halted": state.halted,
+                    "control_epoch": state.control_epoch}
 
     def checkpoint_payload(self, owner_id, *, expected_head=None):
         """Prepare an unsigned snapshot for a separately controlled owner signer."""
@@ -265,6 +269,9 @@ class LocalLedger:
                 raise ProtocolError("local clock is unavailable") from exc
             if accepted_at < last_time:
                 raise ProtocolError("local clock moved backwards")
+            if command.get("kind") == "resume":
+                if expected_head is None or command.get("control_head") != head:
+                    raise ProtocolError("resume requires a matching externally retained head")
             mission = state.apply(command, signature, json.loads(self._policy_json), accepted_at)
             if command["kind"] in ("evidence", "attestation"):
                 if artifact is None or not hmac.compare_digest(
@@ -281,6 +288,6 @@ class LocalLedger:
             result = {"sequence": seq, "head": next_head, "state": mission["state"]}
             if command["kind"] == "revoke":
                 result["target_actor_id"] = command["target_actor_id"]
-            elif command["kind"] != "halt":
+            elif command["kind"] not in ("halt", "resume"):
                 result["mission_id"] = command["mission_id"]
             return result
