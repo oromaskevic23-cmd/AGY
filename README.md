@@ -34,12 +34,17 @@ With Python 3.10 or later and the dependency in `requirements.txt` installed:
 ```sh
 python3 -m agy.demo
 python3 -m agy.owner_demo
+python3 -m agy.runtime_demo
 python3 -m unittest discover -s tests -v
 ```
 
 The demos generate disposable keys in memory, exercise a signed mission and
 local owner controls, and replay their journals. `python3 -m agy.cli --help` describes the local command
-interface. See [local protocol guide](docs/13-local-protocol.md) and
+interface. The [v0.3 local owner-runtime experiment](docs/14-owner-runtime-v03.md) demonstrates
+stopping an actual disposable test worker and owner-signed local recovery. It is
+NOT a production HANTER integration or external agent kill switch.
+
+See [local protocol guide](docs/13-local-protocol.md) and
 [evidence-integrity prototype](examples/evidence/README.md) for boundaries.
 
 ---
