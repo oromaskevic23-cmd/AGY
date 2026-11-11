@@ -112,11 +112,14 @@ class LocalControlRuntime:
         self._workers = {}
         # Fail closed until a caller supplies an independently held head to start().
         self._fenced = True
+        self._audit_failed = False
 
     def start(self, mission_id, *, expected_head, mode="cooperative"):
         """Start fixed code only, after AGY approval and head verification."""
         with self._lock:
             snapshot = self.ledger.verify(expected_head=expected_head)
+            if self._audit_failed:
+                raise RuntimeControlError("local security audit was not safely recorded")
             if snapshot["halted"]:
                 self._fenced = True
             elif self._fenced and self._workers:
@@ -205,7 +208,14 @@ class LocalControlRuntime:
                 self.audit.record(action, "REJECTED")
             raise
         if self.audit is not None:
-            self.audit.record(action, "ACCEPTED")
+            try:
+                self.audit.record(action, "ACCEPTED")
+                result["local_audit_recorded"] = True
+            except (OSError, LedgerIntegrityError, ValueError):
+                # A failed auxiliary audit must NEVER prevent stopping a worker.
+                # The executor stays fail-closed for subsequent admissions.
+                self._audit_failed = True
+                result["local_audit_recorded"] = False
         return result
 
     def halt(self, command, signature, *, expected_head):
@@ -238,6 +248,8 @@ class LocalControlRuntime:
 
     def resume(self, command, signature, *, expected_head):
         with self._lock:
+            if self._audit_failed:
+                raise RuntimeControlError("security audit failure prevents recovery")
             if any(process.poll() is None for process, _ in self._workers.values()):
                 raise RuntimeControlError("cannot resume with unconfirmed running workers")
             result = self._apply("resume", command, signature, expected_head=expected_head)
