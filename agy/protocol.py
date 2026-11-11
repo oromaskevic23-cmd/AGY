@@ -30,6 +30,7 @@ EXTRAS = {
     "attestation": {"mission_id", "intent_sha256", "artifact_sha256", "verdict"},
     "revoke": {"target_actor_id", "reason_code", "policy_sha256"},
     "halt": {"reason_code", "policy_sha256"},
+    "resume": {"reason_code", "policy_sha256", "control_head", "control_epoch"},
 }
 REASON_CODES = ("COMPROMISE", "MISUSE", "OWNER_DECISION", "OTHER")
 
@@ -124,12 +125,16 @@ def _validated_payload(payload: object, policy: dict, at: int) -> tuple[dict, st
         _identifier(payload["mission_id"], "mission_id")
     if kind == "revoke":
         _identifier(payload["target_actor_id"], "target actor ID")
-    if kind in ("revoke", "halt") and payload["reason_code"] not in REASON_CODES:
+    if kind in ("revoke", "halt", "resume") and payload["reason_code"] not in REASON_CODES:
         raise ProtocolError("invalid owner control reason")
-    if kind in ("revoke", "halt"):
+    if kind in ("revoke", "halt", "resume"):
         _digest(payload["policy_sha256"], "policy digest")
         if payload["policy_sha256"] != hashlib.sha256(canonical_json(policy)).hexdigest():
             raise ProtocolError("owner control does not match the local policy")
+    if kind == "resume":
+        _digest(payload["control_head"], "control head")
+        if type(payload["control_epoch"]) is not int or payload["control_epoch"] < 1:
+            raise ProtocolError("invalid resume control epoch")
     if payload["network_id"] != policy["network_id"]:
         raise ProtocolError("wrong network")
     issued = payload["issued_at"]
@@ -157,6 +162,7 @@ class ProtocolState:
     used_nonces: set = field(default_factory=set)
     revoked_actors: set = field(default_factory=set)
     halted: bool = False
+    control_epoch: int = 0
 
     def apply(self, payload: dict, signature: str, policy: dict, at: int) -> dict:
         payload, kind = _validated_payload(payload, policy, at)
@@ -169,7 +175,8 @@ class ProtocolState:
         if self.halted and kind in ("intent", "approval", "evidence"):
             raise ProtocolError("local admission is halted")
         role = {"intent": "agents", "evidence": "agents", "approval": "approvers",
-                "attestation": "verifiers", "revoke": "owners", "halt": "owners"}[kind]
+                "attestation": "verifiers", "revoke": "owners", "halt": "owners",
+                "resume": "owners"}[kind]
         entry = policy.get(role, {}).get(actor)
         if entry is None:
             raise ProtocolError("actor has no role for this command")
@@ -199,11 +206,21 @@ class ProtocolState:
             if self.halted:
                 raise ProtocolError("local admission is already halted")
             self.halted = True
+            self.control_epoch += 1
             for mission in self.missions.values():
                 if mission["state"] in ("PENDING_APPROVAL", "AUTHORIZED"):
                     mission["state"] = "BLOCKED_HALTED"
             self.used_nonces.add(nonce)
             return {"state": "HALTED"}
+        if kind == "resume":
+            if not self.halted:
+                raise ProtocolError("local admission is not halted")
+            if payload["control_epoch"] != self.control_epoch + 1:
+                raise ProtocolError("resume control epoch is stale")
+            self.halted = False
+            self.control_epoch += 1
+            self.used_nonces.add(nonce)
+            return {"state": "RESUMED"}
 
         mission_id = payload["mission_id"]
         mission = self.missions.get(mission_id)
