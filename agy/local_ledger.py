@@ -13,7 +13,11 @@ import sqlite3
 import stat
 import time
 
-from agy.protocol import HASH, ProtocolError, ProtocolState, canonical_json, validate_policy
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
+from agy.protocol import (HASH, SIGNATURE, ProtocolError, ProtocolState, canonical_json,
+                          checkpoint_signing_bytes, validate_policy)
 
 
 class LedgerIntegrityError(RuntimeError):
@@ -206,7 +210,46 @@ class LocalLedger:
         with self._transaction(write=False) as conn:
             state, count, head, _ = self._replay(conn)
             self._check_head(expected_head, head)
-            return {"events": count, "head": head, "missions": copy.deepcopy(state.missions)}
+            return {"events": count, "head": head, "missions": copy.deepcopy(state.missions),
+                    "revoked_actors": sorted(state.revoked_actors), "halted": state.halted}
+
+    def checkpoint_payload(self, owner_id, *, expected_head=None):
+        """Prepare an unsigned snapshot for a separately controlled owner signer."""
+        policy = json.loads(self._policy_json)
+        if type(owner_id) is not str or owner_id not in policy.get("owners", {}):
+            raise ProtocolError("checkpoint owner is not configured")
+        snapshot = self.verify(expected_head=expected_head)
+        return {"schema": "agy.local-checkpoint.v1", "network_id": self._network_id,
+                "policy_sha256": self._policy_sha256, "owner_id": owner_id,
+                "event_count": snapshot["events"], "head": snapshot["head"]}
+
+    def verify_checkpoint(self, checkpoint, signature):
+        """Verify an owner's signed snapshot against the entire local journal."""
+        fields = {"schema", "network_id", "policy_sha256", "owner_id", "event_count", "head"}
+        if (type(checkpoint) is not dict or set(checkpoint) != fields
+                or checkpoint["schema"] != "agy.local-checkpoint.v1"
+                or checkpoint["network_id"] != self._network_id
+                or checkpoint["policy_sha256"] != self._policy_sha256
+                or type(checkpoint["event_count"]) is not int
+                or not 0 <= checkpoint["event_count"] <= MAX_EVENTS
+                or type(checkpoint["head"]) is not str or not HASH.fullmatch(checkpoint["head"])
+                or type(checkpoint["owner_id"]) is not str
+                or type(signature) is not str or not SIGNATURE.fullmatch(signature)):
+            raise LedgerIntegrityError("invalid signed checkpoint")
+        key = json.loads(self._policy_json).get("owners", {}).get(checkpoint["owner_id"])
+        if key is None:
+            raise LedgerIntegrityError("checkpoint owner is not trusted")
+        try:
+            Ed25519PublicKey.from_public_bytes(bytes.fromhex(key)).verify(
+                bytes.fromhex(signature), checkpoint_signing_bytes(checkpoint))
+        except (InvalidSignature, ValueError) as exc:
+            raise LedgerIntegrityError("checkpoint signature verification failed") from exc
+        snapshot = self.verify(expected_head=checkpoint["head"])
+        if snapshot["events"] != checkpoint["event_count"]:
+            raise LedgerIntegrityError("checkpoint event count does not match")
+        snapshot["checkpoint_owner"] = checkpoint["owner_id"]
+        snapshot["freshness_verified"] = False
+        return snapshot
 
     def submit(self, payload: dict, signature: str, *, artifact=None, expected_head=None):
         """Append one authorized transition; rejected attempts do not modify the ledger."""
@@ -235,5 +278,9 @@ class LocalLedger:
             next_head = _event_hash(seq, head, body)
             conn.execute("INSERT INTO events(seq, previous_hash, body, event_hash) VALUES (?, ?, ?, ?)",
                          (seq, head, body, next_head))
-            return {"sequence": seq, "head": next_head, "state": mission["state"],
-                    "mission_id": command["mission_id"]}
+            result = {"sequence": seq, "head": next_head, "state": mission["state"]}
+            if command["kind"] == "revoke":
+                result["target_actor_id"] = command["target_actor_id"]
+            elif command["kind"] != "halt":
+                result["mission_id"] = command["mission_id"]
+            return result

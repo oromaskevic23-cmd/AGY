@@ -48,7 +48,7 @@ def _json_file(path, limit):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     subcommands = parser.add_subparsers(dest="action", required=True)
-    for action in ("init", "submit", "verify"):
+    for action in ("init", "submit", "verify", "checkpoint"):
         subcommand = subcommands.add_parser(action)
         subcommand.add_argument("--database", type=Path, required=True)
         subcommand.add_argument("--policy", type=Path, required=True)
@@ -59,7 +59,13 @@ def main(argv=None):
             subcommand.add_argument("--artifact", type=Path)
             subcommand.add_argument("--expected-head", required=True)
         elif action == "verify":
-            subcommand.add_argument("--expected-head")
+            anchor = subcommand.add_mutually_exclusive_group()
+            anchor.add_argument("--expected-head")
+            anchor.add_argument("--checkpoint", type=Path)
+            subcommand.add_argument("--checkpoint-signature", type=Path)
+        elif action == "checkpoint":
+            subcommand.add_argument("--owner-id", required=True)
+            subcommand.add_argument("--expected-head", required=True)
     args = parser.parse_args(argv)
     try:
         policy = _json_file(args.policy, 256 * 1024)
@@ -70,9 +76,24 @@ def main(argv=None):
         else:
             ledger = LocalLedger(args.database, policy, create=False)
             if args.action == "verify":
-                result = ledger.verify(expected_head=args.expected_head)
+                if args.checkpoint is not None:
+                    if args.checkpoint_signature is None:
+                        raise ProtocolError("checkpoint requires a detached signature")
+                    checkpoint = _json_file(args.checkpoint, 16 * 1024)
+                    signature = _read_file(args.checkpoint_signature, 256).decode("ascii").strip()
+                    result = ledger.verify_checkpoint(checkpoint, signature)
+                    result["anchor_kind"] = "signed_checkpoint"
+                    result["anchor_checked"] = True
+                else:
+                    if args.checkpoint_signature is not None:
+                        raise ProtocolError("checkpoint signature requires a checkpoint")
+                    result = ledger.verify(expected_head=args.expected_head)
+                    result["anchor_checked"] = args.expected_head is not None
+                    result["anchor_kind"] = "head" if args.expected_head is not None else "none"
                 result["status"] = "CONSISTENT"
-                result["anchor_checked"] = args.expected_head is not None
+            elif args.action == "checkpoint":
+                checkpoint = ledger.checkpoint_payload(args.owner_id, expected_head=args.expected_head)
+                result = {"status": "UNSIGNED_CHECKPOINT", "checkpoint": checkpoint}
             else:
                 command = _json_file(args.command, 16 * 1024)
                 signature = _read_file(args.signature, 256).decode("ascii").strip()

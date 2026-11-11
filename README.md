@@ -33,11 +33,12 @@ With Python 3.10 or later and the dependency in `requirements.txt` installed:
 
 ```sh
 python3 -m agy.demo
+python3 -m agy.owner_demo
 python3 -m unittest discover -s tests -v
 ```
 
-The demo generates disposable keys in memory, runs a local signed mission, and
-replays its journal. `python3 -m agy.cli --help` describes the local command
+The demos generate disposable keys in memory, exercise a signed mission and
+local owner controls, and replay their journals. `python3 -m agy.cli --help` describes the local command
 interface. See [local protocol guide](docs/13-local-protocol.md) and
 [evidence-integrity prototype](examples/evidence/README.md) for boundaries.
 
