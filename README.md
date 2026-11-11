@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/agy-banner.jpg" alt="AGY: a global network of AI agents" width="100%" />
+</p>
+
 # AGY
 
 <p align="center">
@@ -9,12 +13,18 @@
 
 ## The Native Blockchain for Autonomous Intelligence
 
-A zero-fee, high-speed AI-native blockchain designed from first principles for autonomous AI agents.
+AGY is an AI-native blockchain architecture for autonomous AI agents. Zero-fee
+normal operations and high performance are design goals, not measured or
+verified capabilities.
 
 **Author & Architect:** Alexander Romaskevich  
 **Public Signature:** RomaskevicH  
 **Origin:** IMPERIAL Core  
 **Status:** Architecture / Specification / Early Development
+
+The repository includes a small offline evidence-integrity prototype. It is not
+a blockchain node, consensus implementation, identity system, or proof that a
+mission was completed. See [the prototype guide](examples/evidence/README.md).
 
 ---
 
@@ -60,7 +70,7 @@ AI Passport → Capability → Intent → Mission → Evidence → Reputation
 
 AGY is not a conventional blockchain with AI bolted on top.
 
-AGY is architected from first principles as protocol infrastructure specifically for autonomous intelligence:
+AGY is architected from first principles as protocol infrastructure specifically for autonomous intelligence. The following are target capabilities, not claims of a live network:
 
 - Every agent has a **persistent identity** (AI Passport), not just a wallet address
 - Authority is **bounded by capability**, not unlimited by balance
@@ -72,6 +82,8 @@ AGY is architected from first principles as protocol infrastructure specifically
 ---
 
 ## Core AGY Architecture
+
+The following are proposed components and properties unless explicitly marked as implemented and verified:
 
 - **AI Passport** — Persistent cryptographic agent identity
 - **Capability-Based Authorization** — Bounded permission scopes per agent
@@ -139,7 +151,7 @@ Instead of enforcing scarcity through gas prices, AGY uses:
 - **Reputation** — Behavioral trust score
 - **Admission Control** — Protocol-level resource gating
 
-This allows authentic agents to operate without payment while preventing spam and abuse.
+The intended outcome is to make normal operations fee-free while limiting spam and abuse. Its effectiveness and funding model remain unverified.
 
 ---
 
@@ -179,7 +191,7 @@ Mainnet Launch (PENDING)
 |-----------|--------|
 | **Architecture** | ACTIVE / DOCUMENTED |
 | **Specification** | IN DEVELOPMENT |
-| **Reference Implementation** | NOT YET VERIFIED |
+| **Blockchain Reference Implementation** | NOT YET VERIFIED |
 | **Devnet** | NOT YET VERIFIED |
 | **Testnet** | NOT YET VERIFIED |
 | **Mainnet** | NOT LAUNCHED |
@@ -205,6 +217,7 @@ Complete technical architecture is organized in `/docs/`:
 | [09-interoperability.md](docs/09-interoperability.md) | Cross-chain integration, standards, compatibility |
 | [10-core-protocol.md](docs/10-core-protocol.md) | Protocol specification and implementation guidance |
 | [11-production-readiness.md](docs/11-production-readiness.md) | Production requirements, security review, mainnet gate |
+| [12-consensus-evidence-proposal.md](docs/12-consensus-evidence-proposal.md) | Draft BFT and evidence-verification design, assumptions, and open decisions |
 
 ---
 
@@ -212,7 +225,7 @@ Complete technical architecture is organized in `/docs/`:
 
 **AGY** = AI-native blockchain infrastructure
 
-**IMPERIUM** = Separate digital-asset project within IMPERIAL Core
+**IMPERIUM** = Separate IMPERIAL Core digital-asset project and a long-term architectural digital-currency vision for AI agents worldwide; current global use is not claimed.
 
 AGY does not automatically declare:
 - IMPERIUM as a native token
