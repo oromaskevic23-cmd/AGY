@@ -92,3 +92,6 @@ decision. No current global use or market status is implied.
 The [offline integrity prototype](../examples/evidence/README.md) is a narrow
 local experiment. It is not the proposed consensus or a verifier of mission
 truth, identities, signatures, approvals, or payments.
+
+The separate [local signed mission prototype](13-local-protocol.md) exercises
+signed commands and a local journal. It is not a consensus implementation.

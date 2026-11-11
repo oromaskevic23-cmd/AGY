@@ -22,9 +22,24 @@ verified capabilities.
 **Origin:** IMPERIAL Core  
 **Status:** Architecture / Specification / Early Development
 
-The repository includes a small offline evidence-integrity prototype. It is not
-a blockchain node, consensus implementation, identity system, or proof that a
-mission was completed. See [the prototype guide](examples/evidence/README.md).
+The repository includes an experimental local mission journal and a separate
+offline evidence-integrity checker. They are not a blockchain network,
+consensus implementation, production identity or approval system, or proof
+that a mission was completed correctly.
+
+### Try the local mission prototype
+
+With Python 3.10 or later and the dependency in `requirements.txt` installed:
+
+```sh
+python3 -m agy.demo
+python3 -m unittest discover -s tests -v
+```
+
+The demo generates disposable keys in memory, runs a local signed mission, and
+replays its journal. `python3 -m agy.cli --help` describes the local command
+interface. See [local protocol guide](docs/13-local-protocol.md) and
+[evidence-integrity prototype](examples/evidence/README.md) for boundaries.
 
 ---
 
@@ -191,12 +206,13 @@ Mainnet Launch (PENDING)
 |-----------|--------|
 | **Architecture** | ACTIVE / DOCUMENTED |
 | **Specification** | IN DEVELOPMENT |
+| **Local Mission Prototype** | EXPERIMENTAL / LOCAL ONLY |
 | **Blockchain Reference Implementation** | NOT YET VERIFIED |
 | **Devnet** | NOT YET VERIFIED |
 | **Testnet** | NOT YET VERIFIED |
 | **Mainnet** | NOT LAUNCHED |
 
-**Truthful Status:** This project is at the architecture and specification stage. No production, mainnet, throughput, adoption, liquidity, partnership or economic claims are valid without independent verified evidence.
+**Truthful Status:** The blockchain network is at the architecture and specification stage; a narrow local mission prototype is available. No production, mainnet, throughput, adoption, liquidity, partnership or economic claims are valid without independent verified evidence.
 
 ---
 
@@ -218,6 +234,7 @@ Complete technical architecture is organized in `/docs/`:
 | [10-core-protocol.md](docs/10-core-protocol.md) | Protocol specification and implementation guidance |
 | [11-production-readiness.md](docs/11-production-readiness.md) | Production requirements, security review, mainnet gate |
 | [12-consensus-evidence-proposal.md](docs/12-consensus-evidence-proposal.md) | Draft BFT and evidence-verification design, assumptions, and open decisions |
+| [13-local-protocol.md](docs/13-local-protocol.md) | Experimental local signed mission journal, usage, and limitations |
 
 ---
 
@@ -273,6 +290,9 @@ IMPERIAL Core technology
 ```
 AGY/
 ├── README.md                          # This file
+├── agy/                               # Experimental local signed mission prototype
+├── tests/                             # Local protocol and evidence tests
+├── requirements.txt                   # Direct development dependency
 ├── AUTHORS.md                         # Authorship
 ├── PROVENANCE.md                      # Origin and provenance
 ├── ARCHITECTURE.md                    # Architecture overview
@@ -291,7 +311,9 @@ AGY/
     ├── 08-developer-platform.md
     ├── 09-interoperability.md
     ├── 10-core-protocol.md
-    └── 11-production-readiness.md
+    ├── 11-production-readiness.md
+    ├── 12-consensus-evidence-proposal.md
+    └── 13-local-protocol.md
 ```
 
 ---
@@ -312,7 +334,7 @@ Architected by Alexander Romaskevich (RomaskevicH)
 
 Alexander Romaskevich — RomaskevicH. Founder • Owner • CEO of IMPERIAL Core. Architect / Final Architectural Decision Authority. HANTER — AI Command Center.
 
-[Founder identity](https://github.com/oromaskevic23-cmd/Capital-Core-Public/blob/main/docs/FOUNDER_IDENTITY.md) · [Public evidence and portfolio](https://github.com/oromaskevic23-cmd/Capital-Core-Public/blob/main/docs/PORTFOLIO.md). The audited public tree is **SPECIFIED**; throughput, zero-fee operation and live deployment are design goals, not measurements verified by this sprint.
+[Founder identity](https://github.com/oromaskevic23-cmd/Capital-Core-Public/blob/main/docs/FOUNDER_IDENTITY.md) · [Public evidence and portfolio](https://github.com/oromaskevic23-cmd/Capital-Core-Public/blob/main/docs/PORTFOLIO.md). The local protocol prototype is experimental; throughput, zero-fee operation and live network deployment are design goals, not verified measurements.
 
 
 ---

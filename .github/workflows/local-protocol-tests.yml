@@ -1,0 +1,32 @@
+name: AGY Local Protocol Tests
+on:
+  push:
+    branches: [main]
+    paths: ['agy/**', 'tests/**', 'tools/**', 'examples/evidence/**', 'requirements.txt', '.github/workflows/local-protocol-tests.yml']
+  pull_request:
+    paths: ['agy/**', 'tests/**', 'tools/**', 'examples/evidence/**', 'requirements.txt', '.github/workflows/local-protocol-tests.yml']
+permissions:
+  contents: read
+concurrency:
+  group: agy-local-protocol-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  local-protocol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install pinned development dependency
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Run local protocol tests
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: .venv/bin/python -m unittest discover -s tests -v
+      - name: Run offline demonstration
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: .venv/bin/python -m agy.demo
