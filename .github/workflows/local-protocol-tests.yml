@@ -32,3 +32,4 @@ jobs:
         run: |
           .venv/bin/python -m agy.demo
           .venv/bin/python -m agy.owner_demo
+          .venv/bin/python -m agy.runtime_demo
